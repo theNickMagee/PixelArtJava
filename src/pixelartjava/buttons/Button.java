@@ -24,11 +24,13 @@ public class Button {
     public boolean singlePress, pressed, listening, iconMode;
     int r, g, b;
     PImage icon;
-    String label;
+    public String label, type;
+    int loopCount;
 
-    Button(PApplet sketch, ButtonManager buttonManager, float x, float y, float w, float h, boolean singlePressMode, int r, int g, int b, String text, boolean iconMode, boolean listening) {
+    public Button(PApplet sketch, ButtonManager buttonManager, String type, float x, float y, float w, float h, boolean singlePressMode, int r, int g, int b, String text, boolean iconMode, boolean listening) {
         this.sketch = sketch;
         this.manager = buttonManager;
+        this.type = type;
         this.x = x;
         this.y = y;
         this.w = w;
@@ -45,16 +47,24 @@ public class Button {
             this.label = text;
         }
         this.listening = listening;
+        this.loopCount = 0;
     }
 
     public boolean listen() {
-        if (this.sketch.mousePressed && this.sketch.mouseX > this.x && sketch.mouseX < this.x + this.w && sketch.mouseY > this.y && sketch.mouseY < this.y + this.w && this.listening) {
+        this.loopCount++;
+        if (this.sketch.mousePressed && this.sketch.mouseX > this.x && sketch.mouseX < this.x + this.w
+                && sketch.mouseY > this.y && sketch.mouseY < this.y + this.w && this.listening && this.loopCount > 20) {
+
             if (this.singlePress) {
-                this.pressed = true;
+                this.loopCount = 0;
             }
-            System.out.println("button clicked");
+            this.pressed = true;
+
+            // System.out.println("button clicked");
             return true;
         }
+        this.pressed = false;
+        //System.out.println("returning false");
         return false;
     }
 
@@ -74,7 +84,7 @@ public class Button {
                 this.sketch.fill(0);
                 this.sketch.textAlign(CENTER);
                 this.sketch.textSize(12);
-                this.sketch.text(this.label, this.x + this.w / 2, this.y + this.h / 2 - 5);
+                this.sketch.text(this.label, this.x + this.w / 2, this.y + this.h / 2);
             }
         }
     }
@@ -84,41 +94,6 @@ public class Button {
 
 }
 
-//class CreateProjectButton extends Button {
-//    DimensionButtons dimensionButtons;
-//    ProjectButton projectButton;
-//
-//    CreateProjectButton(PApplet sketch, ProjectButton parent, ArrayList<Button> buttonList, float x, float y, float w, float h) {
-//        super(sketch, buttonList, x, y, w, h, true, 200, 200, 200, "Create New Project", false, false);
-//
-//        this.dimensionButtons = new DimensionButtons(sketch, this, buttonList, this.x - sketch.width / 6, this.y, this.w / 2, this.h, 20);
-//
-//        this.projectButton = parent;
-//    }
-//
-//    @Override
-//    boolean wasClicked() {
-//        if (super.wasClicked()) {
-//            System.out.println("CreateNewProject button was clicked");
-//
-//            this.projectButton.offeringOptions = false;
-//            this.hide();
-//            projectButton.openProjectButton.hide();
-//            projectButton.projectOpen = true;
-//
-//            dimensionButtons.turnOnButtons();
-//
-//            return true;
-//        }
-//        return false;
-//    }
-//
-//    void hide() {
-//        super.listening = false;
-//    }
-//
-//}
-//
 //class OpenProjectButton extends Button {
 //
 //    ProjectButton projectButton;
